@@ -215,10 +215,10 @@ class DetailPageView(DetailView):
             obj = False
         if obj:
             obj_tag1 = obj.tag.split(',')
-            tag_post = UserPost.objects.filter(Q(tag__icontains=obj_tag1[0]) | Q(tag__icontains=obj_tag1[1]), is_published=True).select_related(\
-                'author').exclude(slug_name=self.kwargs['slug']).order_by('-publish_date')[0:6]
+            #tag_post = UserPost.objects.filter(Q(tag__icontains=obj_tag1[0]) | Q(tag__icontains=obj_tag1[1]), is_published=True).select_related(\
+            #    'author').exclude(slug_name=self.kwargs['slug']).order_by('-publish_date')[0:6]
             
-            rel_question = QuestionAsked.objects.filter(Q(tag__icontains=obj_tag1[0]) | Q(tag__icontains=obj_tag1[1])).select_related()[:8]
+            #rel_question = QuestionAsked.objects.filter(Q(tag__icontains=obj_tag1[0]) | Q(tag__icontains=obj_tag1[1])).select_related()[:8]
             p_register = PopUpForm()
             if user_authenticated:
                 nav_user = UsersDetail.objects.filter(username=username).select_related(
@@ -226,8 +226,8 @@ class DetailPageView(DetailView):
                 context.update({'nav_bar_user':nav_user})
             context.update({
                 'question':qs,
-                'rel_question':rel_question,
-                'tag_post': tag_post,
+                'rel_question':[],
+                'tag_post': [],
                 'req_username': str(username),
                 'user_authenticated': user_authenticated,
                 'username': str(username),

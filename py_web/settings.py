@@ -117,14 +117,18 @@ WSGI_APPLICATION = 'py_web.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'py_web',
-        'USER': 'aman',
-        'PASSWORD': 'Aman@4321',
-        'HOST': 'localhost',
-        'PORT':''
+	'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+    #'default': {
+    #    'ENGINE': 'django.db.backends.mysql',
+    #    'NAME': 'py_web',
+    #    'USER': 'aman',
+    #    'PASSWORD': 'Aman@4321',
+    #    'HOST': 'localhost',
+    #    'PORT':''
+    #}
 }
 
 
@@ -178,3 +182,4 @@ from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR:'danger',
 }
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
