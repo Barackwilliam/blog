@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-3">
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-md-12 col-sm-12 col-lg-8 mx-auto">
+            <div class="card mb-3 bg-light">
+                <div class="card-body">
+                    <div class="card-header"><h4>{{question.title}}</h4></div>
+                    <p class="card-text">
+                        {{question.qes|safe}}
+                    </p>
+                    <small>Tag:- {{question.tag}}</small>
+                    <hr>
+                    <h6 id="discussion-heading_qes" class="ml-4 mb-0 pb-0"></h6>
+                        <label id='token' class="svg_img_path" path="{% static 'assets/img/svgimg.PNG' %}" csrf-value="{{ csrf_token }}"></label>
+                        <a class='btn btn-sm get_discuss_qes' onclick="get_discuss_func(event,'qes', '');return false" id="get_comment_id" data-href="{% url 'get_discussion' question.id 'qes_rom' %}"></a>                
+                        <div id="accordian" class="accordian_qes ml-lg-5 bg-light">
+                        </div>
+                </div>
+            </div>
+            <div class="alrt">
+                {% include 'partials/_alerts.html' %}
+            </div>
+            <h6>{{ans_count}} Answers:- </h6>
+            {% for ansr in answer %}
+            <div class="row">
+                <div class="p-0 mt-3 mr-0 col-md-1" title="This answer is perfect."> 
+                    {% if ansr.selected_ans %}
+                        <i class="fa fa-check fa-2x fa-fw sty" style="color:green"></i>
+                    {% elif question.qes_asked_by.username == request.user.username %}                        
+                        <a href="{% url 'select_answer' id=ansr.id q_id=question.id %}" class="m-0 p-0"><i class="fa fa-square"></i> </a>
+                    {% endif %}
+                </div>
+                <div class="col-md-11 m-0 p-0">
+                    <div class="card mt-1 ml-1">
+                        <div class="card-body">
+                            <p class="card-text mb-0">
+                                {{ansr.ans|safe}}
+                            </p>
+                            {% with ans_user=ansr.ans_user|first %} <!-- This return first item in a list -->
+                            {% if request.user == ans_user.username %}
+                            <a href="{% url 'edit_answer' ansr.id %}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>
+                            <a href="{% url 'delete_answer' ansr.id %}" class="m-2 btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+                            {% endif %}
+                            <ul class="list-inline m-0 p-0 float-right">
+                                <footer class="blockquote-footer float-right">Answer given by :- 
+                                <a class="text-decoration-none" href="{% url 'dashboard' ans_user.username.username %} "> <img class="ml-2 mr-2 rounded-circle" {% if ans_user.profile_photo %}src="{{ans_user.profile_photo.url}}" {% else %} src="{% static '/assets/img/17004.svg' %}" {% endif %} height="30px" width="30px" alt="">
+                                <small title="{{ans_user.username.username}}"> <strong>{{ans_user.username.username}}</strong></small></a>
+                                </footer>
+                            </ul>
+                            {% endwith %}
+                        </div>
+                        <h6 id="discussion-heading_ans{{ansr.id}}" class="ml-4 mb-0 pb-0"></h6>
+                        <label id='token' class="svg_img_path" path="{% static 'assets/img/svgimg.PNG' %}" csrf-value="{{ csrf_token }}"></label>
+                        <div id="accordian" class="ml-lg-5 accordian_ans{{ansr.id}}">
+                        </div>
+                        <div class="card-footer m-0 p-0">
+                            <a class='btn btn-sm get_discuss_ans{{ansr.id}} float-left' onclick="get_discuss_func(event,'ans',{{ansr.id}}); return false;" id="get_comment_id" data-href="{% url 'get_discussion' ansr.id 'discuss_rom' %}"><h6>See discussion</h6></a>                
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            {% endfor %}
+            <div class="text-dark mt-4">
+              <h6>Your answer :- </h6>
+            </div>
+            <div class="card-row">
+                <form action="{% url 'answer' %}" method="POST">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="hidden" class="followers-numberid" token="{{csrf_token}}">
+                            {% csrf_token %}
+                            {{a_form.media}}
+                            {{a_form.ans}}
+                            <input type="hidden" value="{{question.id}}" name="q_id">
+                        </div>  
+                    </div>
+                    {% if request.user.is_authenticated %}
+                        <button class="btn btn-sm btn-success m-0" type="submit">Submit</button>
+                    {% else %}
+                        <button data-target="#exampleModalCenter" data-toggle="modal" class="btn btn-sm btn-outline-success" type="button">Submit </button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+        <div class="col">
+            <br>
+            <h5> Related questions: </h5>
+            {% for r_qes in rel_qes %}
+                <small><a href="{% url 'all_answer' id=r_qes.id q_title=r_qes.slug_name %}">{{r_qes.title}}</a></small>
+            {% endfor %}
+            {% include 'partials/side_view.html' %}
+        </div>
+    </div>
+    {% include 'partials/_popup_login.html' %}
+</div>
+
+
+{% endblock %}

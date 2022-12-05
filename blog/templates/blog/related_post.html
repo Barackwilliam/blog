@@ -1,0 +1,61 @@
+{% load static %}
+{% if username == author_username %}
+    <div class="col">
+        <ul class="list-inline">
+            <li class="list-inline-item"><a class="btn btn-sm btn-outline-primary" href="{% url 'post_edit' i.author.username i.id %}"> Edit Post </a>
+            </li>
+            <li class="list-inline-item"><a class="btn btn-sm btn-outline-dark" type="button" data-toggle="modal" data-target="#exampleModalCenterDel{{i.id}}">Delete Post</a><br>
+            </li>
+            {% include 'partials/_buttons.html' with i=i %}
+        </ul>
+    </div>
+    <br>
+{% endif %}
+
+{% if tag_p %}
+<h2 class="col-12">Related Post:</h2><hr>
+        {% for related_post in tag_p %}
+            <div class="media ml-lg-4 ml-md-2">
+              <img class="img-fluid rounded-circle border-0 card-img d-block mr-3" style="width:42px;height:42px;" src="{{related_post.blog_image.url}}" alt="">
+              <div class="media-body">
+                <a class="mt-0" href="{% url 'detail_page' related_post.author.user_email|slice:':-10' related_post.slug_name %}">{{related_post.blog_title}}</a>
+                <ul class="list-inline ml-2">
+                    <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-clock"></i><small class="text-body"> {{related_post.reading_time}} minutes</small></a></li>
+                    <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-comments"></i><small class="text-body"> {{related_post.total_comment}} comments</small></a></li>
+                    <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-eye"></i><small class="text-body"> {{related_post.total_views}} views</small></a></li>
+                </ul>
+              </div>
+            </div>
+        {% endfor %}
+{% endif %}
+<br>
+<h4>Comment:</h4>
+<small>Total comments: <strong class="comments-count">{{i.total_comment}}</strong></small>
+<br>
+<label id='token' class="svg_img_path" path="{% static 'assets/img/svgimg.PNG' %}" csrf-value="{{ csrf_token }}"></label>
+{% if user_authenticated %}
+<button class='btn btn-sm get_comment' onclick="get_comment_func(event)" id="get_comment_id" data-href="{% url 'get_comment' i.id %}">Show all comment </button>
+{% else %}
+<div class="mx-2 px-2 row">
+    <ul class="list-inline pt-0">
+        <li class="list-inline-item">
+            <button class="btn border-left" disabled>Wants to comments?</button>
+            <button class="btn btn-sm btn-dark" type="button" data-toggle="modal" data-target="#exampleModalCenter">Click here</button>
+        </li>
+    </ul>
+</div><br>
+{% endif %}
+<br>
+<div id="accordian">
+
+</div>
+<!-- closing first div -->
+</div>
+<div class="mt-0 pd-0 col-sm-10 col-md-5 col-lg-4 col-xl-4">
+    {% include 'partials/side_view.html' %}
+<br>
+</div>
+<!-- closing 2nd div -->
+</div>
+
+<hr>

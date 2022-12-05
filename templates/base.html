@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang='en' dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>
+            {% block title %}Alone-Blogger{% endblock %}
+        </title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{% static 'assets/css/Footer-Basic.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/Newsletter-Subscription-Form.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+        <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+        <!-- <script src="https://www.google.com/recaptcha/api.js"></script> -->
+
+    </head>
+    <body>
+        <!-- Navbar -->
+        {% include 'partials/_navbar.html' %}
+
+        {% block content %}
+        {% endblock %}
+
+        {% include 'partials/_footer.html' %}
+
+        <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+        <script src="{% static 'assets/js/main.js' %}"></script>
+        <script src="{% static 'assets/js/discus.js' %}"></script>
+
+        <script src="{% static 'assets/js/jquery.wayseffect.min.js' %}">
+
+        </script>
+        <script src="{% static 'assets/js/infscroll.min.js' %}">
+
+        </script>
+        <script type="text/javascript">
+            var infinite = new Wayseffect.Infscroll({
+              element: $('.infinite-scroll')[0],
+              offset: 'bottom-in-view',
+              onBeforePageLoad: function () {
+                $('.spinner_on_off').show();
+              },
+              onAfterPageLoad: function ($items) {
+                $('.spinner_on_off').hide();
+              }
+            });
+        
+        </script>
+        <script>
+           
+    </script>
+    </body>
+</html>

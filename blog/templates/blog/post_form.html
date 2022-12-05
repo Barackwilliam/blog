@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block title %} | Your Post{% endblock %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col mx-auto">
+                <div class="card-header bg-light text-dark">
+                    <button class="float-right text-muted text-wrap border-0 badge badge-light" type="button" data-toggle="modal" data-target="#exampleModalCenterhelp" style="width: 6rem;">help in writing blog</button>
+                    {% include 'partials/_add_post_help.html' %}
+                  <h4><i class="fas fa-book"></i> {% if 'post_blog' in request.path %}Add Post:{% else %}Edit Post:{% endif %}</h4>
+                </div>
+                <div class="card-row">
+                    {% include 'partials/_alerts.html' %}
+                    {% if 'post_blog' in request.path %}
+                        <form action="{% url 'post_blog' req_username %}" method="POST" enctype="multipart/form-data">
+                    {% else %}
+                        <form action="{% url 'post_edit' req_username post.id %}" method="POST" enctype="multipart/form-data">
+                    {% endif %}
+                        {% csrf_token %}
+                        {% if form.blog_title %}
+                        {{ form.non_field_errors }}
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="{{ form.blog_title.id_for_label }}"><span style='color:red;'>*</span>Title:</label>
+                                {{form.blog_title}}
+                                {{ form.blog_title.errors }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="{{ form.blog_image.id_for_label }}"><span style='color:red;'>*</span>Image:</label>
+                                {{form.blog_image}}
+                                {{form.blog_image.help_text|safe}}
+                                {{ form.blog_image.errors }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="{{ form.image_credit.id_for_label }}">Image credit:</label>
+                                {{form.image_credit}}
+                                {{form.image_credit.help_text|safe}}
+                                {{ form.image_credit.errors }}
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="form-group">
+                            {{ form.blog_description.errors }}
+                            <label for="{{ form.blog_description.id_for_label }}"><span style='color:red;'>*</span>Description:</label>
+                            {{form.media}}
+                            {{form.blog_description}}
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-7">
+                                <label for="{{ form.tag.id_for_label }}"><span style='color:red;'>*</span>Tag:</label>
+                                {{form.tag}}
+                                {{form.tag.help_text|safe}}
+                                {{ form.tag.errors }}
+                            </div>
+                        {% if form.category %}
+                            <div class="col-md-3">
+                                <label for="{{ form.category.id_for_label }}"><span style='color:red;'>*</span>Category:</label>
+                                {{form.category}}
+                                {{ form.category.errors }}
+                            </div>
+                        {% endif %}
+                            <div class="col-md-2">
+                                <label for="{{ form.reading_time.id_for_label }}"><span style='color:red;'>*</span>Reading time:</label>
+                                {{form.reading_time}}
+                                {{form.reading_time.help_text|safe}}
+                                {{ form.reading_time.errors }}
+                            </div>
+                        </div>
+                        <!-- <div class="form-group">
+                            <div class="g-recaptcha" data-sitekey="6Lfoqb4UAAAAAPUT6qH0RxRiy3fHHn__hoh75fvS"></div>
+                        </div> -->
+                        <hr>
+                        <div class="form-row">
+                            {% if 'post_blog' in request.path %}
+                                <div class="form-group col-md-4">
+                                    <button class="btn btn-sm btn-success" type="submit">Preview post</button>
+                                    <a class="btn btn-sm btn-secondary" href="{% url 'post_blog' req_username %}"> Reset </a>
+                                </div>
+                            {% else %}
+                                <div class="form-group col-md-4">
+                                    <button class="btn btn-sm btn-success" type="submit">Update post</button>
+                                    {% if post.is_published %}
+                                        <a class="btn btn-sm btn-outline-info m-2" href="{% url 'update' req_username post.id %}"> unpublish </a>
+                                    {% endif %}
+                                    <button class="btn btn-sm btn-outline-danger" type="button" data-toggle="modal" data-target="#exampleModalCenterDel{{post.id}}">Delete Post</button><br>
+                                    {% include 'partials/_buttons.html' with i=post %}
+                                </div>
+                                <div class="form-group col">
+                                    <a class="btn btn-sm btn-outline-info float-right" href="{% url 'post_blog' req_username %}"> Add new post </a>
+                                    <a class="btn btn-sm btn-outline-secondary mr-2 float-right" href="{% url 'dashboard' req_username %}"> Dashboard </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

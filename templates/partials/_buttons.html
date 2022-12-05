@@ -1,0 +1,41 @@
+<div class="modal fadeIn animated" role="dialog" tabindex="-1" id="exampleModalCenterDel{{i.id}}" aria-labelledby="exampleModalCenterDel{{i.id}}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <nav>
+                            <div class="nav nav-tabs justify-content-center" id="nav-tab{{i.id}}" role="tablist">
+                                <a class="nav-item nav-link active btn-dark" id="nav-delete-tab{{i.id}}" data-toggle="tab" href="#nav-delete{{i.id}}" role="tab" aria-controls="nav-delete{{i.id}}" aria-selected="true">Are you sure?</a>
+                            </div>
+                        </nav>
+                        <div class="tab-content" id="nav-tabContent{{i.id}}">
+                            <div class="tab-pane fade show active" id="nav-delete{{i.id}}"  aria-labelledby="nav-delete-tab{{i.id}}">
+                                <div class="modal-body">
+                                    <div class="card-body">
+                                        <h4 class="card-title"><strong>Title:</strong> {{i.blog_title}}</h4><hr>
+                                        <h6 class="card-subtitle mb-2">
+                                            {% if i.blog_image %}
+                                                <img class="img-fluid card-img w-75 d-block" src="{{i.blog_image.url}}" alt="Image">
+                                            {% endif %}
+                                        </h6>
+                                        <h6 class="card-subtitle mb-2">Total Views: {{i.total_views}}</h6>
+                                        <h6 class="card-subtitle mb-2">Total Comments: {{i.total_comment}}</h6>
+                                        <p class="card-text"></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a class="btn btn-sm btn-light" type="button" data-dismiss="modal">Go Back</a>
+                                        <a class="btn btn-sm btn-outline-danger" href="{% url 'delete' i.author.username i.slug_name %}">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

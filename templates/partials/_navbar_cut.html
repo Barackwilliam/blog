@@ -1,0 +1,28 @@
+<div class="icon-badge-container icon-badge-click mt-2" onclick="notification_engine(event,'icon-badge-click');return false" data-href="{% url 'hide_notification' req_username %}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <i class="far fa-bell icon-badge-icon" style="color:dimgray;"></i>
+{% if unread_notification > 0 %}
+    <div class="icon-badge"><a class="icon-badge remove-badge-click" style="background-color: #ff0000;">{{unread_notification}}</a></div>
+{% endif %}
+</div>
+<div class="dropdown-menu dropdown-menu-left dropdown-menu-lg-right mb-0 pb-0">
+<div class="list-group list-group-change" nav-count="{{unread_notification}}" count="{{total_notification_count}}" style = "{% if total_notification_count > 9 %} height:500px; {% else %} height:50px {% endif %} overflow:auto">
+<ul class="list-group list-group-flush" style="width:400px;">
+{% if total_notification_count %}
+
+{% for notify in notification %}
+<a type="button" href='{{notify.text_url}}' target="_blank" class="list-group-item list-group-item-action list-group-clr-{{forloop.counter}}">
+    <small class="d-inline-block"> {{notify.text|safe|truncatechars:90 }}</small>
+</a>
+{% endfor %}
+
+{% else %}
+<a type="button" class="list-group-item list-group-item-action">
+    <small class="text-muted d-inline-block"> ******** notification is empty ********</small>
+</a>
+{% endif %}
+</ul>
+</div>
+    <p class="list-group-item text-center list-group-item-dark mb-0">
+<a href="{% url 'user_notification' %}" class="d-inline-block"> See all </a>
+</p>
+</div>

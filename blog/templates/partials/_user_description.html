@@ -1,0 +1,70 @@
+{% load static %}
+<section class="py-1">
+    <div class="container shadow-sm" id="profilecontainer">
+        <div class="row justify-content-center mx-0" id="profilerow">
+            <div class="col-auto col-sm-6 col-md-5 col-lg-4 offset-2 offset-sm-0 align-self-center">
+                <div style="background-color: rgb(244,244,244);" class="card w-75 profile border-0">
+                    {% if i.profile_photo %}
+                        <div class="card-body"><img class="img-fluid border rounded-circle border-0 card-img w-100 d-block" src="{{i.profile_photo.url}}" alt="profile photo"></div>
+                    {% else %}
+                        <div class="card-body"><img class="img-fluid border rounded-circle border-0 card-img w-100 d-block" src="{% static 'assets/img/17004.svg' %}" alt="profile photo"></div>
+                    {% endif %}
+                    {% if not i.thought == None and  not i.thought == 'None' %}
+                        <small class="text-center" style="font-family:'Sofia';"><i><strong>{{i.thought}}</strong></i></small>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-7 col-lg-8">
+                <div class="jumbotron" style="background-color:rgb(244,244,244);">
+                    {% if i.First_name %}
+                    <ul class="list-inline d-inline-flex m-0 p-0">
+                        <li class="list-inline-item m-0 p-0"><a class="text-decoration-none text-dark border-0 m-0 p-0" href="{% url 'dashboard' author_username %}"><h1 class="m-0 p-0"><strong style="text-transform: capitalize;">{{i.First_name}} {{i.Last_name}}</strong></h1></a></li>
+                        <li class="list-inline-item m-0 p-0 d-none d-sm-block"><a class="badge" href="#">( @{{author_username}} )</a></li>
+                    </ul>
+                    {% else %}
+                        <a href="{% url 'dashboard' author_username %}" class="btn m-0 p-0"><h1>{{author_username}}</h1></a>
+                    {% endif %}
+                    {% if i.about %}
+                        <p>{{ i.about|safe|truncatechars:222 }}
+                            <a class="text-dark" type="button" data-toggle="modal" data-target="#exampleModalCenterdash1{{i.id}}"><strong>Read more</strong></a>
+                        </p>
+                    {% include 'partials/_dashboard_detail.html' with i=useracc %}
+                    {% endif %}
+                    <p></p>
+                    <ul class="list-inline mb-1 pb-0">
+                        <li class="list-inline-item"><a class="text-body" href="{{i.youtube_url}}"><i class="fa fa-youtube-play"></i></a></li>
+                        <li class="list-inline-item"><a class="text-body" href="{{i.facebook_url}}"><i class="fa fa-facebook-official"></i></a></li>
+                        <li class="list-inline-item"><a class="text-body" href="{{i.github_url}}"><i class="fa fa-github"></i></a></li>
+                        <li class="list-inline-item"><a class="text-body" href="{{i.youtube_url}}"><i class="fa fa-instagram"></i></a></li>
+                        <li class="list-inline-item"><a class="text-body" href="{{i.linkedin_url}}"><i class="fa fa-linkedin"></i></a></li>
+                        <li class="list-inline-item"><a class="text-body">
+                            {% if user_authenticated %}
+                                {% if username != author_username %}
+                                    <button type="button" data-href="{% url 'user_follow_toggle' author_username %}" class="followbtn btn btn-sm btn-outline-dark">
+                                        {% if nav_bar_user in i.followers.all %}unfollow{% else %}follow{% endif %}
+                                    </button>
+                                {% endif %}
+                            {% else %}
+                                <button {% if user_authenticated %} id="unregister-user" data-href="{% url 'user_follow_toggle' author_username %}" {% else %} data-target="#exampleModalCenter" data-toggle="modal" {% endif %} class="btn btn-sm btn-outline-dark" type="button">follow </button>
+
+                            {% endif %}
+                        </a></li>
+                    </ul>
+                    <small class="text-muted">Followed by </small><a href="#" {% if user_authenticated %} data-href="{% url 'user_follow_toggle' author_id %}"
+                        data-target="#exampleModalCenterfollower" token={{csrf_token}} class="followers-numberid follower-num text-muted" {% else %} data-target="#exampleModalCenter" class="text-muted"{% endif %} data-toggle="modal"> {{follower_count}}</a><small class="text-muted"> people</small>
+                    {% include 'partials/followers_.html' with dash_username=i.First_name %}
+                </div>
+                <div class="row">
+                    <nav class="bg-light">
+                        <div class="nav nav-tabs" id="nav-tab" role="tab">
+                            <a class="nav-item nav-link active badge badge-light p-2" id="user-blog-button-tab" data-toggle="tab" href="#user-blog-button" role="tab" aria-controls="user-blog-button" aria-selected="true">__Blog__</a>
+                            <a class="nav-item nav-link badge badge-light p-2" id="question-asked-button-tab" data-toggle="tab" href="#question-asked-button" role="tab" aria-controls="question-asked-button" aria-selected="false">Question asked</a>
+                            <a class="nav-item nav-link badge badge-light p-2" id="follow-to-button-tab" onclick="go_to_follow('{{author_username}}')" data-toggle="tab" href="#follow-to-button" role="tab" aria-controls="follow-to-button" aria-selected="false">Following</a>
+                            
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

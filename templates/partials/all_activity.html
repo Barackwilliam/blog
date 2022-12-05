@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="alrt">
+        {% include 'partials/_alerts.html' %}
+    </div>
+    <div class="row" id="myrow">
+        <div class="col-md-0 col-lg-2 col-xl-2">
+
+        </div>
+        <div class="col-md-7 col-lg-6 col-xl-6 infinite-scroll">
+            <h2>All Activity:</h2>
+            {% if all_post %}
+            {% for post in all_post %}
+            <div class="card bg-light">
+                <div class="card-body">
+                    <div class="media">
+                        <img src="{{post.blog_image.url}}" class="mr-3" alt="image" height="40px" width="40px">
+                        <div class="media-body">
+                        <h5 class="mt-0">
+                            <a href="{% url 'detail_page' slu=req_username slug=post.slug_name %} " class="card-link"><p class="card-text">You posted: {{post.blog_title}}</p></a>
+                        </h5>
+                        {% if post.comment_set.count > 0 %}
+                        <div class="media mt-3">
+                            <div class="media-body">
+                                <p class='p-0 mb-2'>
+                                    {{post.total_comment}} user commented on this post.   
+                                </p>
+                            </div>
+                        </div>
+                        {% else %}
+                        <p class="mb-3">No activity on this post</p>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+            {% for notification in nav_user.getnotification_set.all %}
+            <div class="media">
+                <div class="media-body">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <p>
+                                <a href="{{notification.text_url}}" class="card-link">{{notification.text}}</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="col">
+                <h5>You does't do anything still yet. Ativity log is empty</h5>
+            </div>
+            {% endif %}
+            <br>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-0 col-lg-2 col-xl-2">
+    
+        </div>
+        <div class="col">
+            {% if all_post %}
+            <span class="current">
+                Page {{ all_post.number }} of {{ all_post.paginator.num_pages }}.
+            </span>
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" href="?query={{request.GET.query}}&page=1">First</a>
+                </li>
+                <li class="page-item {% if not all_post.has_previous %} disabled">
+                <a class="page-link" {% else %}"><a class="page-link" href="?query={{request.GET.query}}&page={{all_post.previous_page_number}}" {% endif %} tabindex="-1">&laquo;</a>
+                </li>
+                {% for i in all_post.paginator.page_range %}
+                <li class="page-item {% if all_post.number == i %} active {% endif %}">
+                <a class="page-link" href="?query={{request.GET.query}}&page={{i}}">{{i}} <span class="sr-only">(current)</span></a>
+                </li>
+                {% endfor %}
+                <li class="page-item">
+                    {% if all_post.has_next %}
+                <a class="page-link" href="?query={{request.GET.query}}&page={{ all_post.next_page_number }}">&raquo;</a>
+                {% endif %}
+                </li>
+                <li class="page-item"><a class="page-link" href="?query={{request.GET.query}}&page={{ all_post.paginator.num_pages }}">Last</a></li>
+            </ul>
+          {% endif %}
+        </div>
+
+    </div>
+    
+</div>
+{% endblock %}

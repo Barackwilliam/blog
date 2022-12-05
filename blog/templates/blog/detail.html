@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}{{userpost.blog_title}}{% endblock %}
+{% load i18n %}
+{% load static %}
+{% block content %}
+{% with i=userpost %}
+    {% include 'partials/_user_description.html' with i=useracc username=username follower_count=i.follower_count author_username=author_username %}
+    <section>
+        <div class="alrt">{% include 'partials/_alerts.html' %}</div>
+        
+        <div class="container shadow">
+
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="user-blog-button"  aria-labelledby="user-blog-tab">
+            <div class="row">
+                <div class="col-sm-0 col-md-0 col-lg-0 col-xl-1">
+                </div>
+                <div class="col-sm-11 col-md-7 col-lg-7 col-xl-7 py-5 px-0 mx-0">
+                    <article class="card border-0 mb-2 pl-2">
+                        <div class="card-body text-center" style="border-color:rgb(244,244,244)">
+                            <h2 class="text-center card-title">{{i.blog_title}}</h2>
+                            <ul class="list-inline">
+                                <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-calendar"></i><small> {% autoescape on %} {{i.publish_date|date}}{% endautoescape %}</small></a></li>
+                                {% if i.author.First_name %}
+                                    <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-user-circle"></i><small class="text-body"> {{i.author.First_name }} {{i.author.Last_name}}</small></a></li>
+                                {% else %}
+                                    <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-user-circle"></i><small class="text-body"> {{author_username }}</small></a></li>
+                                {% endif %}
+                                <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-comments"></i><small class="text-body"> {{i.total_comment }} comments</small></a></li>
+                                <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-eye"></i><small class="text-body"> {{i.total_views}} views</small></a></li>
+                            </ul>
+                            <hr>
+                        </div>
+                        <div>{% autoescape off %} {{i.blog_description}}{% endautoescape %} </div>
+                    </article>
+                    {% if i.is_published %}
+                        {% include 'blog/related_post.html' with i=i nav_bar_user=nav_bar_user username=req_username tag_p=tag_post user_authenticated=user_authenticated %}
+                    {% else %}
+                        {% if req_username == author_username %}
+                            <div class="col">
+                                <ul class="list-inline">
+                                    <li class="list-inline-item"><a class="btn btn-sm btn-dark" href="{% url 'update' author_username i.id %}"> Publish </a>
+                                    </li>
+                                    <li class="list-inline-item"><a class="btn btn-sm btn-outline-primary" href="{% url 'post_edit' author_username i.id %}"> Edit Post </a>
+                                    </li>
+                                    <li class="list-inline-item"><a class="btn btn-sm btn-outline-dark" type="button" data-toggle="modal" data-target="#exampleModalCenterDel{{i.id}}">Delete Post</a><br>
+                                    </li>
+                                    {% include 'partials/_buttons.html' with i=i %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+            </div>
+            {% include 'partials/_popup_login.html' %}
+                <div class="tab-pane fade" id="question-asked-button" aria-labelledby="question-asked">
+                    <div class="text-center">
+                        <br>
+                        <br>
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-md-8 col-sm-12">
+                                {% for qs in question %}
+                                    <div class="card m-0 p-0">
+                                        <div class="card-body ml-3 mt-2 p-0">
+                                            <a class="float-left" href="{% url 'all_answer' id=qs.id q_title=qs.slug_name %}">{{qs.title}}</a>
+                                            {% if qs.qes_asked_by.username == req_username %}
+                                            <a href="{% url 'edit_question' qs.id %}" class="btn btn-sm btn-primary float-left ml-2 mr-2" data-toggle="tooltip" title="edit"><i class="fa fa-edit"></i></a>
+                                            <a href="#" class="btn btn-sm btn-danger float-left" data-toggle="modal" data-target="#QuestionModalCenterDel{{qs.id}}"><i class="fa fa-trash"></i></a>
+                                            {% include 'partials/_delete_question.html' with qs=qs %}
+                                            {% endif %}
+                                            <p class="blockquote-footer mr-2 text-right">Question asked by: <strong>{{qs.qes_asked_by.username}}</strong></p>
+                                        </div>
+                                        <p class="card-text text-left ml-3 p-0 mt-0">Tag:- {{qs.tag}}</p>
+                                    </div>
+                                {% empty %}
+                                <div class="text-center ml-5 pl-5">
+                                <button class='btn btn-sm ml-5 pl-5' disabled >There are no questions related to {{dash_username}}</button>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-4"></div>
+                        </div>
+                      <br>
+                      <br>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+</section>
+{% endwith %}
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}{% if request.user.is_authenticated %}{{request.user.username}} | Update{% else %} | Register{% endif %} {% endblock %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-md-8 mx-auto">
+          <div class="card">
+            <div class="card-header bg-light text-dark">
+              <h4>
+                {% if request.user.is_authenticated %}
+                <img class="img-fluid rounded-circle" style="object-fit:contain;height:35px;width:35px;"
+                {% if nav_user.profile_photo_th %}
+                src="{{nav_user.profile_photo_th.url}}"
+                {% else %}
+                src="{% static 'assets/img/17004.svg' %}"
+                {% endif %}> Update {% else %}<i class="fas fa-user-plus"></i> Register{% endif %}</h4>
+            </div>
+            <div class="card-body">
+                {% include 'partials/_alerts.html' %}
+                {% if 'social' in request.path %}
+                <form method="POST" action="{% url 'update_social_account' request.user %}" enctype="multipart/form-data">
+                {% else %}
+                <form method="POST" enctype="multipart/form-data">
+                {% endif %}
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{register.as_p}}
+                    </div>
+                    <div class="form-group">
+                        <div class="g-recaptcha" data-sitekey="6Lfoqb4UAAAAAPUT6qH0RxRiy3fHHn__hoh75fvS"></div>
+                    </div>
+                    {% if 'update' in request.path %}
+                        <br><button class="btn btn-dark btn-block" type="submit" name="button">Update me</button>
+                    {% else %}
+                        <br><button class="btn btn-dark btn-block" type="submit" name="button">Register</button>
+                    {% endif %}
+                </form>
+                {% if not request.user.is_authenticated %}
+                    <div class="form-group">
+                        <small class="text-muted">Already have an Account?</small>
+                        <a href="{% url 'login' %}">
+                            <small class="text-muted">click here</small>
+                        </a>
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

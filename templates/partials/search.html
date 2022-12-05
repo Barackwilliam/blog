@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <div class="alrt">
+            {% include 'partials/_alerts.html' %}
+        </div>
+        <div class="row" id="myrow">
+            <div class="col-md-1 col-lg-2 col-xl-2">
+    
+            </div>
+            <div class="col-md-6 col-lg-6 col-xl-6 infinite-scroll">
+                <h2>Search result for <strong>"{{request.GET.query}}"</strong>:</h2><br>
+                {% for search in all_result %}
+                    {% if search.blog_title %}
+                    <div class="infinite-item">
+                        <div class="media ml-lg-4 ml-md-2 text-center">
+                            <img class="m-0 p-0 img-fluid rounded-circle" style="width:70px;height:70px;" {% if search.blog_image %} src="{{search.blog_image.url}}" {% endif %} alt="image">
+                            <div class="media-body m-0 p-0">
+                            
+                            <a class="mt-0" href="{% url 'detail_page' slu=search.author.username.username slug=search.slug_name %}">{{search.blog_title}}</a>
+                            <ul class="list-inline ml-0">
+                                <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-clock"></i><small class="text-body"> {{search.reading_time}} minutes</small></a></li>
+                                <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-comments"></i><small class="text-body"> {{search.total_comment}} comments</small></a></li>
+                                <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-eye"></i><small class="text-body"> {{search.total_views}} views</small></a></li>
+                            </ul>
+                            </div>
+                        </div><hr>
+                    </div>
+                    {% else %}
+                <div class="infinite-item">
+                    <div class="media ml-lg-4 ml-md-2 text-center">
+                        <img class="m-0 p-0 img-fluid rounded-circle" style="width:70px;height:70px;" {% if search.profile_photo %} src="{{search.profile_photo.url}}" {% else %} src="{% static 'assets/img/17004.svg' %}" {% endif %} alt="image">
+                        <div class="media-body m-0 p-0">
+                        
+                            <a class="mt-0" href="{% url 'dashboard' search.username %} ">{{search.First_name}} {{search.Last_name}} </a><br>
+                            <small>{% if search.interests != None %}Interests:- {{search.interests}} {% endif %}</small>
+                            <ul class="list-inline ml-0">
+                                <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-users"></i><small class="text-body"> {{search.foll_count}} followers</small></a></li>
+                                <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-book"></i><small class="text-body"> {{search.post_count}} post</small></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+                {% endif %}
+                {% endfor %}
+                <br>
+                
+            </div>
+            <div class="col">
+                <br>
+                {% include 'partials/side_view.html' %}
+            </div>
+    
+        </div>
+          {% if all_result.has_next %}
+            <a href="?page={{ all_result.next_page_number }}&{% if request.GET.f %}f={{request.GET.f}}{% else %}f='a'{% endif %}&query={{request.GET.query}}" class="infinite-more-link"></a>
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

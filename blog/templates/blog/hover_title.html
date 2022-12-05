@@ -1,0 +1,56 @@
+<div class='card bg-dark' style='width: 18rem;'>
+    <div class='col-md-10 ml-md-3'>
+        <img {% if comnt.user.profile_photo %}
+                src='{{comnt.user.profile_photo.url}}'
+             {% else %}
+                 src='{% static 'assets/img/17004.svg' %}'
+             {% endif %} class='img-fluid card-img-top rounded-circle' width='50px' width='50px' alt='photo'>
+    </div>
+  <div class='card-body'>
+    <a href='{% url 'dashboard' comnt.user.username %}' class='card-title text-capitalize text-white'>
+        {% if comnt.user.First_name %}
+            {{comnt.user.First_name}} {{comnt.user.Last_name}}
+        {% else %}
+            {{comnt.user.username}}
+        {% endif %}</a>
+        <p class='card-text d-inline-block'>{% if comnt.user.interests %}{{comnt.user.interests}}{% endif %}</p>
+        <p class='card-text'>followed by {{comnt.user.followers.count}} people</p>
+
+        <ul class='list-inline'>
+            <li class='list-inline-item'><a class='text-white'{% if comnt.user.youtube_url %} href='{{comnt.user.youtube_url}}' {% endif %}><i class='fa fa-youtube-play'></i></a></li>
+            <li class='list-inline-item'><a class='text-white' {% if comnt.user.facebook_url %} href='{{comnt.user.facebook_url}} {% endif %}'><i class='fa fa-facebook-official'></i></a></li>
+            <li class='list-inline-item'><a class='text-white' {% if comnt.user.github_url %} href='{{comnt.user.github_url}}' {% endif %}><i class='fa fa-github'></i></a></li>
+            <li class='list-inline-item'><a class='text-white' {% if comnt.user.youtube_url %} href='{{comnt.user.youtube_url}}' {% endif %}><i class='fa fa-instagram'></i></a></li>
+            <li class='list-inline-item'><a class='text-white' {% if comnt.user.linkedin_url %} href='{{comnt.user.linkedin_url}}' {% endif %}><i class='fa fa-linkedin'></i></a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- Reply-comment -->
+<div class='card bg-dark' style='width: 18rem;'>
+    <div class='col-md-10 ml-md-3'>
+        <img {% if j.user.profile_photo %}
+                src='{{j.user.profile_photo.url}}'
+             {% else %}
+                 src='{% static 'assets/img/17004.svg' %}'
+             {% endif %} class='img-fluid card-img-top rounded-circle' width='50px' width='50px' alt='photo'>
+    </div>
+  <div class='card-body'>
+    <a href='{% url 'dashboard' j.user.username %}' class='card-title text-capitalize text-white'>
+        {% if j.user.First_name %}
+            {{j.user.First_name}} {{j.user.Last_name}}
+        {% else %}
+            {{j.user.username}}
+        {% endif %}</a>
+        <p class='card-text d-inline-block'>{% if j.user.interests %}{{j.user.interests}}{% endif %}</p>
+        <p class='card-text'>followed by {{j.user.followers.count}} people</p>
+
+        <ul class='list-inline'>
+            <li class='list-inline-item'><a class='text-white'{% if j.user.youtube_url %} href='{{j.user.youtube_url}}' {% endif %}><i class='fa fa-youtube-play'></i></a></li>
+            <li class='list-inline-item'><a class='text-white' {% if j.user.facebook_url %} href='{{j.user.facebook_url}} {% endif %}'><i class='fa fa-facebook-official'></i></a></li>
+            <li class='list-inline-item'><a class='text-white' {% if j.user.github_url %} href='{{j.user.github_url}}' {% endif %}><i class='fa fa-github'></i></a></li>
+            <li class='list-inline-item'><a class='text-white' {% if j.user.youtube_url %} href='{{j.user.youtube_url}}' {% endif %}><i class='fa fa-globe'></i></a></li>
+            <li class='list-inline-item'><a class='text-white' {% if j.user.linkedin_url %} href='{{j.user.linkedin_url}}' {% endif %}><i class='fa fa-linkedin'></i></a></li>
+        </ul>
+    </div>
+</div>

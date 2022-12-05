@@ -1,0 +1,30 @@
+<!-- <div class='card mb-0 mt-0 pt-0 pb-0 border-0' style='max-width: 500px;'>
+              {% for follower in useracc.followers.all %}
+              <div class='row no-gutters mb-0 mt-0 pt-0 pb-0'>
+                  <div class='col-sm-1 py-3'>
+                      <img {% if follower.profile_photo_th %} src="{{follower.profile_photo_th.url}}"{% else %} src="{% static 'assets/img/17004.svg' %}" {% endif %} class='img-fluid rounded-circle' height='50' width='50' alt='photo'>
+                  </div>
+                  <div class='col-sm-8'>
+                      <div class='card-body'>
+                          <h5><a class='card-title' href="{% url 'dashboard' follower.username %}">{{follower.username}}</a></h5>
+                          {% if follower.interests %}
+                          <p class='card-text m-0 p-0'>{{follower.interests}}</p>
+                          {% endif %}
+                          <small class='text-muted'>followed by </small><small data-value='pop-followers-number{{follower.id}}'
+                            class='text-muted pop-followers-number{{follower.username}}'>{{follower.followers.count}}</small>
+                          <small class='text-muted'> people</small>
+                      </div>
+                  </div>
+                  <div class='col-sm-2'>
+                      <div class='card-body'>
+                          {% if nav_user.username != follower.username %}
+                          <button type='button' onclick='follow_and_comment_like(event,{{follower.id}});return false'
+                            data-href='/account/{{follower.username}}/follow/' class='btn btn-sm btn-outline-dark' id='followbtn2{{follower.id}}'>
+                            {% if nav_user in follower.followers.all %}unfollow{% else %}follow{% endif %}
+                        </button>
+                          {% endif %}
+                      </div>
+                  </div>
+              </div>
+              {% endfor %}
+          </div> -->

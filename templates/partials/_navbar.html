@@ -1,0 +1,88 @@
+{% load static %}
+<nav class="navbar navbar-dark bg-dark navbar-expand-md sticky-top pb-1">
+    <div class="container">
+      <a class="navbar-brand" style="font-family:'Sofia';" href="{% url 'page_list' %}">
+        <img class="img-fluid"src="{% static 'assets/img/logo.png' %}" height="30px" width="40px" alt="">
+          Alone-Blogger
+      </a>
+        <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
+            <span class="sr-only"></span>
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse flex-row-reverse" id="navcol-1">
+            <ul class="nav navbar-nav">
+              <form class="form-inline" action="{% url 'search_engine' %}" method="GET">
+                <li class="list-inline"><input class="form-control mr-sm-2" name="query" type="search" placeholder="Search" value="{{request.GET.query}}" aria-label="Search">
+                  <input type="hidden" name="f" value="a">
+                </li>
+                <li class="list-inline"><button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button></li>
+              
+            </form>
+                <li {% if '/' == request.path %}
+                      class="nav-item active"
+                    {% else %}
+                      class="nav-item "
+                    {% endif %}
+                      role="presentation">
+                  <a class="nav-link" href="{% url 'page_list' %}"><i class="fas fa-home"></i> Home</a>
+                </li>
+                {% if user_authenticated %}
+                {% with nav=nav_bar_user %}
+                  <li {% if 'dashboard' in request.path %}
+                         class="nav-item active mr-3 pl-0"
+                       {% else %}
+                         class="nav-item mr-3 pl-0"
+                       {% endif %} role="presentation">
+                       <a class="nav-link" href="{% url 'dashboard' slug=req_username %}">
+                        
+                        <img class="img-fluid rounded-circle nav-bar-img"
+                        style="object-fit:contain;height:30px;width:30px;" src=""> 
+                         {{req_username}}</a>
+                   </li>
+				            <li class="nav-item mr-1" role="presentation">
+                      <div class="show-ntf" data-href="{% url 'all_notification' %}"></div>
+                        <div class="dropdown ntf_dropdown">
+							              <!-- all notification content -->
+                         </div>
+                     </li>
+                     <li class="nav-item dropdown ml-0" role="presentation">
+                      
+                        <a class="nav-link dropdown-toggle" style="font-size: 18px;" href="#" role="button" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        </a>
+                      
+                        <div class="dropdown-menu dropdown-menu-left dropdown-menu-lg-right" aria-labelledby="navbarDropdown">
+                          <a {% if 'post_blog' in request.path %} class="dropdown-item active" {% else %}class="dropdown-item"{% endif %} href="{% url 'post_blog' user %}"><i class="fas fa-book"></i> Add Post</a>
+                          <a {% if 'dashboard' in request.path %} class="dropdown-item active" {% else %}class="dropdown-item"{% endif %} href="{% url 'dashboard' user %}"><i class="fas fa-user"></i> Dashboard</a>
+                          <a {% if 'q_and_a' in request.path %} class="dropdown-item active" {% else %}class="dropdown-item"{% endif %} href="{% url 'q_and_a' %}"><i class="fa fa-question"> Ask question</i></a>
+                            <form class="ml-2 pl-1" id="logout_page" data-href="{% url 'logout_page' req_username %}">
+                              {% csrf_token %}
+                              <div class="form-group">
+                                <button type="submit" class="btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                              </div>
+                            </form>
+                        </div>
+                      
+                     </li>
+                  {% endwith %}
+                 {% else %}
+                 <li {% if 'register' in request.path %}
+                       class="nav-item active mr-1"
+                     {% else %}
+                       class="nav-item mr-1"
+                     {% endif %} role="presentation">
+                   <a class="nav-link" href="{% url 'register' %}">
+                       <i class="fas fa-user-plus"></i> Register</a>
+                 </li>
+                 <li {% if 'login' in request.path %}
+                       class="nav-item active mr-3"
+                     {% else %}
+                       class="nav-item mr-3"
+                     {% endif %} role="presentation">
+                   <a class="nav-link" href="{% url 'login' %}">
+                       <i class="fas fa-sign-in-alt"></i> Login</a>
+                 </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

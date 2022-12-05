@@ -1,0 +1,75 @@
+body {
+  background-color: rgb(244,244,244);
+}
+
+#hero {
+  width: 100%;
+  height: 100vh;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+#sechero {
+  margin-top: 12px;
+}
+.mytooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.mytooltip .mytooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+
+  top: -5px;
+  left: 105%;
+  position: absolute;
+  z-index: 1;
+}
+
+.mytooltip:hover .mytooltiptext {
+  visibility: visible;
+}
+.icon-badge-group .icon-badge-container {
+    display: inline-block;
+    margin-left:15px;
+}
+
+.icon-badge-group .icon-badge-container:first-child {
+  margin-left:0;
+}
+
+.icon-badge-container {
+    margin-top:20px;
+    position:relative;
+}
+
+.icon-badge-icon {
+    font-size: 26px;
+    position: relative;
+    color: dimgray;
+}
+
+.icon-badge {
+    font-size: 12px;
+    color: white;
+    text-align: center;
+    width:20px;
+    height:20px;
+    border-radius: 100%;
+    position: absolute; /* changed */
+    top: -4px; /* changed */
+    left: 10px; /* changed */
+}
+
+@media (max-width: @screen-xs-min) {
+  .modal-xs { width: @modal-sm; }
+}

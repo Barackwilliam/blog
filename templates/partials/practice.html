@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<button class="btn btn-success" data-target="#exampleModalCenterfollower" data-toggle="modal">click here</button>
+<div class="modal animated" role="dialog" tabindex="-1" id="exampleModalCenterfollower" aria-labelledby="exampleModalCenterfollower" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <p class="modal-title" id="exampleModalScrollableTitle">People who follow <strong style="text-transform: capitalize;">{{usr_dtl.First_name}}</strong></p>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+        </div>
+        <div class="modal-body col-md-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <div class='card mb-0 mt-0 pt-0 pb-0 border-0' style='max-width: 500px;'>
+                {% with folwer=usr_dtl.first.followers.all %}
+                {% for follower in folwer %}
+                <div class='row no-gutters mb-0 mt-0 pt-0 pb-0'>
+                    <div class='col-sm-1 py-3'>
+                        <img {% if follower.profile_photo %} src="{{follower.profile_photo.url}}"{% else %} src="{% static 'assets/img/17004.svg' %}" {% endif %} class='img-fluid rounded-circle' height='50' width='50' alt='photo'>
+                    </div>
+                    <div class='col-sm-8'>
+                        <div class='card-body'>
+                            <h5><a class='card-title' href="{% url 'dashboard' follower.username.username %}">{{follower.username}}</a></h5>
+                            {% if follower.interests %}
+                            <p class='card-text m-0 p-0'>{{follower.interests}}</p>
+                            {% endif %}
+                            <small class='text-muted'>followed by </small><small data-value='pop-followers-number{{follower.id}}'
+                              class='text-muted pop-followers-number{{follower.username}}'>{{follower.followers.count}}</small>
+                            <small class='text-muted'> people</small>
+                        </div>
+                    </div>
+                    <div class='col-sm-2'>
+                        <div class='card-body'>
+                            {% if usr_dtl.first != follower %}
+                            <button type='button' onclick='follow_and_comment_like(event,{{follower.id}});return false'
+                              data-href='/account/{{follower.username}}/follow/' class='btn btn-sm btn-outline-dark' id='followbtn2{{follower.id}}'>
+                              {% if usr_dtl in follower.followers.all %}unfollow{% else %}follow{% endif %}
+                          </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endwith %}
+            </div>
+            <div class="text-center spiner_on_off">
+              <div class="spinner-border spinner-border-sm" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="svg_img_path" path="{% static 'assets/img/svgimg.PNG' %}"></div>
+{% endblock %}

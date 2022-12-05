@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{% if dash_user.First_name %}{{dash_user.First_name}} {{dash_user.Last_name}}{% else %}{{dash_user.username}}{% endif %} | Dashboard{% endblock %}
+{% block content %}
+{% with dash=dash_user post=user_post dash_username=dash_user_username dash_first_name=dash_user.First_name dash_Last_name=dash_user.Last_name %}
+<section class="py-1">
+    <div class="container shadow-sm" id="profilecontainer">
+        <div class="row justify-content-center mx-0" id="profilerow">
+            <div class="col-auto col-sm-6 col-md-5 col-lg-4 offset-2 offset-sm-0 align-self-center">
+                <div style="background-color: rgb(244,244,244);" class="card w-75 profile border-0">
+                    {% if dash.profile_photo %}
+                        <div class="card-body"><img class="img-fluid border rounded-circle border-0 card-img d-block" src="{{dash.profile_photo.url}}" alt="profile photo"></div>
+                    {% else %}
+                        <div class="card-body"><img class="img-fluid border rounded-circle border-0 card-img w-100 d-block" src="{% static 'assets/img/17004.svg' %}" alt="profile photo"></div>
+                    {% endif %}
+                    {% if not dash.thought == None and not dash.thought == "None" %}
+                        <small class="text-center" style="font-family:'Sofia';"><i><strong>{{dash.thought}}</strong></i></small>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-7 col-lg-8">
+                <div class="jumbotron" style="background-color:rgb(244,244,244);">
+                    {% if dash_first_name %}
+                    <ul class="list-inline d-inline-flex m-0 p-0">
+                        <li class="list-inline-item m-0 p-0"><a class="text-decoration-none text-dark m-0 p-0" href="{% url 'dashboard' dash_username %}"><h1 class="m-0 p-0"><strong style="text-transform: capitalize;">{{dash_first_name}} {{dash_Last_name}}</strong></h1></a></li>
+                        
+                        <li class="list-inline-item m-0 p-0 d-none d-sm-block"><a class="badge" href="#">( @{{dash_username}} )</a></li>
+                    </ul>
+                    {% else %}
+                    <a class="btn m-0 p-0"><h1>{{dash_username}}</h1></a>
+                    
+                    {% endif %}
+                    {% if dash.about %}
+                        <p>{{ dash.about|safe|truncatechars:222 }}<a class="text-dark" type="button" data-toggle="modal" data-target="#exampleModalCenterdash1{{dash.id}}"><strong>Read more</strong></a></p>
+                    {% include 'partials/_acc_dashboard_detail.html' with i=dash %}
+                    {% endif %}
+                    <p></p>
+                    <ul class="list-inline mb-1 pb-0">
+                        <li class="list-inline-item"><a class="text-body" href="{{dash.youtube_url}}"><i class="fa fa-youtube-play"></i></a></li>
+                        <li class="list-inline-item"><a class="text-body" href="{{dash.facebook_url}}"><i class="fa fa-facebook-official"></i></a></li>
+                        <li class="list-inline-item"><a class="text-body" href="{{dash.github_url}}"><i class="fa fa-github"></i></a></li>
+                        <li class="list-inline-item"><a class="text-body" href="{{dash.youtube_url}}"><i class="fa fa-instagram"></i></a></li>
+                        <li class="list-inline-item"><a class="text-body" href="{{dash.linkedin_url}}"><i class="fa fa-linkedin"></i></a></li>
+                        <li class="list-inline-item"><a class="text-body">
+                            {% if user_authenticated %}
+                                {% if not req_username == dash_username %}
+                                    <button type="button" data-href="{% url 'user_follow_toggle' dash_username %}" class="followbtn btn btn-sm btn-outline-dark">
+                                    {{flo_unflo}}
+                                    </button>
+                                {% endif %}
+                            {% else %}
+                                <button {% if nav %} id="unregister-user" data-href="{% url 'user_follow_toggle' dash_username %}" {% else %} data-target="#exampleModalCenter" data-toggle="modal" {% endif %} class="btn btn-sm btn-outline-dark" type="button">follow </button>
+                                {% include 'partials/_popup_login.html' %}
+                            {% endif %}
+                        </a></li>
+                    </ul>
+                    <small class="text-muted">Followed by </small><a href="#" {% if user_authenticated %} data-href="{% url 'user_follow_toggle' dash.id %}"
+                        data-target="#exampleModalCenterfollower" token="{{csrf_token}}" class="followers-numberid follower-num text-muted" {% else %} data-target="#exampleModalCenter" class="text-muted" {% endif %} data-toggle="modal"> {{dash.follower_count}}</a><small class="text-muted"> people</small>
+                    {% include 'partials/followers_.html' with dash_username=dash_first_name %}
+                    {% if req_username == dash_username %}
+                    <ul class="list-inline float-left">
+                        <li class="list-inline-item">
+                            <a href="{% url 'update_user' dash_username %}" class="badge badge-dark">
+                            Update profile
+                            </a>
+                        </li>
+                        <li class="list-inline-item m-0 p-0">
+                            <small type="button" class="badge badge-primary" id="usertext{{dash.id}}mainEdit" onclick="edit_username('#usertext','{{dash.id}}main','')">edit username only</small>
+                        </li>
+                        <li class="list-inline-item m-0 p-0">
+                            <form id="commbox{{dash.id}}main" class="" data-href="{% url 'update_username' %}">
+                                {% csrf_token %}
+                                <small class='p-0 m-0' id="usertext{{dash.id}}main" data-value="{{dash_username}}"></small>
+                            </form>
+                        </li>
+                        <li class="list-inline-item m-0 p-0">
+                            <small id="editabletext{{dash.id}}mainbutton" onclick="edit_username('#commbox','{{dash.id}}main','sbmit')"></small>
+                        </li>
+                        <li class="list-inline-item m-0 p-0">
+                            <small id="canceltext{{dash.id}}mainbutton" onclick="edit_username('#usertext','{{dash.id}}main','cancel')"></small>
+                        </li>
+                    </ul>
+                        
+                    {% endif %}
+                </div>
+                <div class="row">
+                    <nav class="bg-light">
+                        <div class="nav nav-tabs" id="nav-tab" role="tab">
+                            <a class="nav-item nav-link active badge badge-light p-2" id="user-blog-button-tab" data-toggle="tab" href="#user-blog-button" role="tab" aria-controls="user-blog" aria-selected="true">__Blog__</a>
+                            <a class="nav-item nav-link badge badge-light p-2" id="question-asked-button-tab" data-toggle="tab" href="#question-asked-button" role="tab" aria-controls="question-asked" aria-selected="false">Question asked</a>
+                            <a class="nav-item nav-link badge badge-light p-2" id="follow-to-button-tab" onclick="go_to_follow('{{dash_username}}')" data-toggle="tab" href="#follow-to-button" role="tab" aria-controls="follow-to" aria-selected="false">Following</a>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="container">
+    <div class="alrt">
+        {% include 'partials/_alerts.html' %}
+    </div>
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane show active" id="user-blog-button"  aria-labelledby="user-blog-tab">
+    <div class="row" id="myrow">
+                <div class="col-sm-12 col-md-10 col-lg-10 col-xl-10">
+                    <div class="row infinite-scroll">
+                    {% for i in post %}
+                        <div class="col-md-6 col-sm-12 infinite-item">
+                            <div class="card shadow mt-3">
+                                <div class="card-body text-center">
+                                    <a class="card-link text-dark" href="{% url 'detail_page' dash_username i.slug_name %}"> <h4 class="card-title">{{i.blog_title}}</h4></a>
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-calendar"></i><small> {{i.publish_date|date}}</small></a></li>
+                                            {% if dash_first_name %}
+                                                <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-user-circle-o"></i><small class="text-body"> {{dash_first_name }} {{dash_Last_name}}</small></a></li>
+                                            {% else %}
+                                                <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-user-circle-o"></i><small class="text-body"> {{dash_username }}</small></a></li>
+                                            {% endif %}<li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-comments"></i><small class="text-body"> {{i.total_comment}} comments</small></a></li>
+                                            <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-eye"></i><small class="text-body"> {{i.total_views}} views</small></a></li>
+                                        </ul>
+                                        {% if i.blog_image %}
+                                            <img class="card-img-top w-100 d-block" style="height: 250px;" src="{{i.blog_image.url}}">
+                                        {% endif %}
+
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item"><a class="btn btn-sm btn-dark card-link m-0" href="{% url 'detail_page' dash_username i.slug_name %}">Read post</a>
+                                        </li>
+                                        {% if req_username == dash_username %}
+                                            {% if i.is_published == False %}
+                                                <li class="list-inline-item"><a class="btn btn-sm btn-dark" href="{% url 'update' dash_username i.id %}">Publish </a>
+                                                </li>
+                                            {% endif %}
+                                            <li class="list-inline-item"><a class="btn btn-sm btn-outline-primary" href="{% url 'post_edit' dash_username i.id %}">Edit post </a>
+                                            </li>
+                                            <li class="list-inline-item mt-1"><a class="btn btn-sm btn-outline-dark" type="button" data-toggle="modal" data-target="#exampleModalCenterDel{{i.id}}">Delete post</a><br>
+                                            </li>
+                                            {% include 'partials/_buttons.html' with i=i %}
+                                        {% endif %}
+                                    </ul>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        {% if dash_username != req_username %}
+                        <div class="col ml-md-5 pl-md-5">
+                            <div class="text-center ml-md-5 pl-md-5">
+                                <br><br>
+                                <h6 class="disabled" disabled>{{dash_username}} did not post any blog.</h6>
+                                <br><br><br></div>
+                        </div>
+                        {% else %}
+                        <div class="col ml-md-5 pl-md-5">
+                            <div class="text-center ml-md-5 pl-md-5">
+                                <br><br>
+                                <h5 class="btn-disabled" disabled>You did not post any blog.</h5>
+                                
+                                <a href="{% url 'post_blog' dash_username %}"><button type="button" class="btn btn-lg btn-dark">+Add Post</button></a>
+                            </div>
+                            <br><br>
+                        </div>                         
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                </div>
+</div>
+</div>
+        <div class="tab-pane" id="question-asked-button" aria-labelledby="question-asked">
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-md-8 col-sm-12">
+                        {% for qs in question %}
+                        <div class="card">
+                            <div class="card-body">
+                                <a href="{% url 'all_answer' id=qs.id q_title=qs.slug_name %}">
+                                    <p class="mb-0">{{qs.title}} 
+                                        {% if qs.qes_asked_by.username == req_username %}
+                                        <a href="{% url 'edit_question' qs.id %}" class="btn btn-sm btn-primary m-2" data-toggle="tooltip" title="edit"><i class="fa fa-edit"></i></a>
+                                        <a class="btn btn-sm btn-danger" href="#" data-toggle="modal" data-target="#QuestionModalCenterDel{{qs.id}}"><i class="fa fa-trash"></i> </a>
+                                        {% include 'partials/_delete_question.html' with qs=qs %}
+                                        {% endif %}
+                                    </p>
+                                </a>
+                                <p class="float-left m-0 p-0">Tag:- <small>{{qs.tag}}</small></p>
+                                <footer class="blockquote-footer float-right">Question asked by:- <cite title="{{qs.qes_asked_by.username}}">{{qs.qes_asked_by.username}}</cite></footer>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col ml-md-5 pl-md-5">
+                            <div class="text-center ml-md-5">
+                                {% if req_username == dash_username %}
+                                <h5 class='btn-disabled' disabled >There are no questions related to you</h5>
+                                <a href="{% url 'q_and_a' %}"><button type="button" class="btn btn-lg btn-dark">Ask Question</button></a>
+                                {% else %}
+                                    <h6 class='btn-disabled' disabled >There are no questions related to {{dash_username}}</h6>
+                                {% endif %}
+                                <br>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+              <br>
+              <br>
+        </div>
+    </div>
+    <div class="text-center spinner_on_off">
+        <div class="spinner-border spinner-border-sm" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+      {% if post.has_next %}
+          <a href="?page={{ post.next_page_number }}" class="infinite-more-link"></a>
+      {% endif %}
+</div>
+{% endwith %}
+{% endblock %}

@@ -1,0 +1,56 @@
+{% load static %}
+<div class="modal fade animated" role="dialog" tabindex="-1" id="exampleModalCenterdash1{{i.id}}" aria-labelledby="exampleModalCenterdash1{{i.id}}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 justify-content-center">
+                        <div class="tab-pane fade show active">
+                            <div class="modal-body">
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        {% if i.profile_photo %}
+                                            <div class="card-body align-self-center"><img class="img-fluid rounded-circle w-75" src="{{i.profile_photo.url}}" alt="profile photo"></div>
+                                        {% else %}
+                                            <div class="card-body align-self-center"><img class="img-fluid rounded-circle w-50" src="{% static 'assets/img/17004.svg' %}" alt="profile photo"></div>
+                                        {% endif %}
+                                        {% if not i.thought == None and  not i.thought == 'None' %}
+                                        <small class="bg-light" style="font-family:'Sofia';"><i><strong>{{i.thought}}</strong></i></small>
+                                        {% endif %}
+                                    </div>
+                                    <br>
+                                    {% if i.interests %}
+                                        <h4 class="card-title"><strong>Interest:</strong></h4>
+                                        <p>Interested in {{i.interests|safe}}</p>
+                                    {% endif %}
+
+                                    {% if i.about %}
+                                        <h4 class="card-title"><strong>About:</strong></h4>
+                                        <p>{{i.about|safe}}</p>
+                                    {% endif %}
+                                    <h4 class="card-title"><strong>Contacts:</strong></h4>
+                                    {% if i.youtube_url %}
+                                        <p><a href="{{i.youtube_url}}">{{i.youtube_url}}</a> </p>
+                                    {% endif %}
+                                    {% if i.facebook_url %}
+                                        <p><a href="{{i.facebook_url}}">{{i.facebook_url}}</a> </p>
+                                    {% endif %}
+                                    {% if i.github_url %}
+                                        <p><a href="{{i.github_url}}">{{i.github_url}}</a> </p>
+                                    {% endif %}
+                                    {% if i.linkedin_url %}
+                                        <p><a href="{{i.linkedin_url}}">{{i.linkedin_url}}</a> </p>
+                                    {% endif %}
+                                    <p class="card-text"></p>
+                                </div>
+                                <div class="modal-footer"><a class="btn btn-sm btn-light" type="button btn-success" data-dismiss="modal">Go Back</a></div>
+                            </div>
+                        </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

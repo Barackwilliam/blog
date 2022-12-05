@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+  <div class="alrt">{% include 'partials/_alerts.html' %}</div>
+    <h6 class="mt-4"><strong>{{following.First_name}} {{following.Last_name}}</strong> following these people</h6>
+    <div class="row mt-4">
+        
+            {% for follower in follow_to %}
+            {% with index=forloop.counter|divisibleby:'2' %}
+            <div class="col-sm-12 col-md-4 mb-4 border bg-light ml-3">
+                <div class="media">
+                    <img class="mr-3 img-fluid rounded-circle svg_img_path" path="{% static 'assets/img/17004.svg' %}" {% if follower.profile_photo %} src="{{follower.profile_photo.url}}" {% else %} src="{% static 'assets/img/17004.svg' %}" {% endif %} alt="" style="width: 70px; height: 70px;">
+                    <div class="media-body">
+                    <h6 class="mt-0"><a href="/account/{{follower.username}}/dashboard/" class="text-decoration-none text-dark"> <strong>{{follower.First_name}} {{follower.Last_name}}</strong></a></h6>
+                    {{follower.intersets}}
+                    <small class="text-muted text-center">Followed by </small><a href="#" {% if user_authenticated %} data-href="{% url 'user_follow_toggle' follower.id %}"
+                           data-value="pop-followers-numberf{{follower.id}}" data-target="#exampleModalCenterfollow{{follower.username}}" token="{{csrf_token}}" class="followers-numberid pop-followers-numberf{{follower.id}} text-muted" {% else %} data-target="#exampleModalCenter" class="text-muted" {% endif %} data-toggle="modal"> {{follower.followers.count}}</a><small class="text-muted"> people</small>
+                        {% include 'partials/followers_.html' with dash_username=follower %}
+                    </div>
+                    <button class="btn btn-sm btn-outline-dark mt-2 ml-2 followbtn2f{{follower.id}}" {% if user_authenticated %} onclick="follow_and_comment_like(event, 'f{{follower.id}}');return false;" data-href="{% url 'user_follow_toggle' follower.username %}"{% else %} data-target="#exampleModalCenter" data-toggle="modal" {% endif %}>{% if auth_user in follower.followers.all %} unfollow {% else %} follow {% endif %}</button>
+                </div>
+            </div>
+            {% if index %}
+            <div class="col"></div>
+            {% endif %}
+            {% endwith %}
+            {% empty %}
+            <div class="col-md-6"><h5>No people found</h5><br><br></div>
+            {% endfor %}
+            {% if not user_authenticated %}
+            {% include 'partials/_popup_login.html' %}
+            {% endif %}
+    </div>
+      
+        <span class="current">
+            Page {{ follow_to.number }} of {{ follow_to.paginator.num_pages }}.
+        </span>
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" href="?page=1">First</a>
+              </li>
+            <li class="page-item {% if not follow_to.has_previous %} disabled">
+              <a class="page-link" {% else %}"><a class="page-link" href="?page={{follow_to.previous_page_number}}" {% endif %} tabindex="-1">&laquo;</a>
+            </li>
+            {% for i in follow_to.paginator.page_range %}
+            <li class="page-item {% if follow_to.number == i %} active {% endif %}">
+              <a class="page-link" href="?page={{i}}">{{i}} <span class="sr-only">(current)</span></a>
+            </li>
+            {% endfor %}
+            <li class="page-item">
+                {% if follow_to.has_next %}
+              <a class="page-link" href="?page={{ follow_to.next_page_number }}">&raquo;</a>
+              {% endif %}
+            </li>
+            <li class="page-item"><a class="page-link" href="?page={{ follow_to.paginator.num_pages }}">Last</a></li>
+          </ul>
+</div>
+{% endblock %}

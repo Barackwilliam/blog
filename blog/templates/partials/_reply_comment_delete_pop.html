@@ -1,0 +1,33 @@
+<div class="modal m-0 p-0" id="maincommentDelete20{{dlt.id}}" tabindex="-1" role="dialog" aria-labelledby="maincommentDelete20{{dlt.id}}" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-white bg-dark">
+        <h5 class="modal-title" id="maincommentDelete20{{dlt.id}}">Alone-Blogger</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span style="color:white;" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5 class="float-left">Are You sure ? </h5>
+        <button type="button" id="main_comment_media_5008{{dlt.id}}href" data-href="{% url 'comment_delete' comment_type='main_comment' id=dlt.id %}" onclick="editable_comment('#main_comment_media_5008{{dlt.id}}','{{dlt.id}}','dlt')" class="badge badge-dark float-right">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal m-0 p-0" id="replycommentDelete1{{dlt.id}}" tabindex="-1" role="dialog" aria-labelledby="replycommentDelete1{{dlt.id}}" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-white bg-dark">
+        <h5 class="modal-title" id="replycommentDelete1{{dlt.id}} replycommentDelete1{{dlt.id}}">Alone-Blogger</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span style="color:white;" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5 class="float-left">Are You sure ? </h5>
+        <button type="button" id="reply_comment_1008{{dlt.id}}href" data-href="{% url 'comment_delete' comment_type='reply_comment' id=dlt.id %}" onclick="editable_comment('#reply_comment_1008{{dlt.id}}','{{dlt.id}}','dlt')" class="badge badge-dark float-right">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

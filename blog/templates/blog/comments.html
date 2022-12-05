@@ -1,0 +1,290 @@
+{% load static %}
+<div id="accordian">
+    {% if com %}
+    {% for comnt in com %}
+    {% if username == comnt.user.username or username == useracc.username %}
+        {% include 'partials/_reply_comment_delete_pop.html' with dlt=comnt %}
+    {% endif %}
+    <div class="media col-md-12" id="main_comment_media_5008{{comnt.id}}">
+        <a href="#reply_comment_5008{{comnt.id}}"></a>
+        {% if comnt.user.profile_photo %}
+            <img class="img-fluid rounded-circle mr-2" width="30" height="30" src="{{comnt.user.profile_photo.url}}" alt="pt">
+        {% else %}
+            <img class="img-fluid mr-2" src="{% static 'assets/img/17004.svg' %}" alt="photo" width="30" height="30">
+        {% endif %}
+        <div class="media-body">
+            <div id="reply_comment_5008{{comnt.id}}">
+            <p class='p-0 m-0'><a href="mailto:{{comnt.user.username}}" onmouseover="hover_func({{comnt.id}})" data-toggle="tooltip_{{comnt.id}}" data-html="true"
+                title="<div class='card bg-dark' style='width: 18rem;'>
+                        <div class='col-md-10 ml-md-3'>
+                            <img {% if comnt.user.profile_photo %}
+                                    src='{{comnt.user.profile_photo.url}}'
+                                 {% else %}
+                                     src='{% static 'assets/img/17004.svg' %}'
+                                 {% endif %} class='img-fluid card-img-top rounded-circle' width='50px' width='50px' alt='photo'>
+                        </div>
+                      <div class='card-body'>
+                        <a href='{% url 'dashboard' comnt.user.username %}' class='card-title text-capitalize text-white'>
+                            {% if comnt.user.First_name %}
+                                {{comnt.user.First_name}} {{comnt.user.Last_name}}
+                            {% else %}
+                                {{comnt.user.username}}
+                            {% endif %}</a>
+                            <p class='card-text d-inline-block'>{% if comnt.user.interests %}{{comnt.user.interests}}{% endif %}</p>
+                            <p class='card-text'>followed by {{comnt.user.followers.count}} people</p>
+
+                            <ul class='list-inline'>
+                                <li class='list-inline-item'><a class='text-white'{% if comnt.user.youtube_url %} href='{{comnt.user.youtube_url}}' {% endif %}><i class='fa fa-youtube-play'></i></a></li>
+                                <li class='list-inline-item'><a class='text-white' {% if comnt.user.facebook_url %} href='{{comnt.user.facebook_url}} {% endif %}'><i class='fa fa-facebook-official'></i></a></li>
+                                <li class='list-inline-item'><a class='text-white' {% if comnt.user.github_url %} href='{{comnt.user.github_url}}' {% endif %}><i class='fa fa-github'></i></a></li>
+                                <li class='list-inline-item'><a class='text-white' {% if comnt.user.youtube_url %} href='{{comnt.user.youtube_url}}' {% endif %}><i class='fa fa-instagram'></i></a></li>
+                                <li class='list-inline-item'><a class='text-white' {% if comnt.user.linkedin_url %} href='{{comnt.user.linkedin_url}}' {% endif %}><i class='fa fa-linkedin'></i></a></li>
+                            </ul>
+                        </div>
+                </div>">
+                {% if comnt.user.First_name %}
+                {{comnt.user.First_name}} {{comnt.user.Last_name}} <small class="text-muted">@{{comnt.user.username}}</small>
+                {% else %}
+                {{comnt.user.username}}
+                {% endif %}
+                </a><small class='text-muted'>{% if comnt.user.username == useracc.username %}<small style="background-color: #d9d8d7; border-radius: 10%;">author</small>{% endif %} ({{comnt.date_created|date}})   
+                        {% if username == useracc.username or username == comnt.user.username %}
+                            <strong class="dropdown">
+                                <strong class="text-black dropbutton{{comnt.id}}main" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> . . .</strong>
+                                <small class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    {% if username == comnt.user.username %}
+                                        <small type="button" onclick="editable_comment('#commtext','{{comnt.id}}main','')" class="dropdown-item">Edit</small>
+                                    {% endif %}
+                                    <small type="button" data-toggle="modal" class="dropdown-item" data-target="#maincommentDelete20{{comnt.id}}">Delete</small>
+                                </small>
+                            </strong>
+                        {% endif %}
+                    </small>
+            </p>
+            <form id="commbox{{comnt.id}}main" data-href="{% url 'edit_comment' comment_type='main_comment' id=comnt.id %}">
+                {% csrf_token %}
+                <small class='p-0 m-0' id="commtext{{comnt.id}}main">{{comnt.text|safe}}</small>
+            </form>
+            <small id="editabletext{{comnt.id}}mainbutton" onclick="editable_comment('#commbox','{{comnt.id}}main','sbmit')"></small>
+            <small id="canceltext{{comnt.id}}mainbutton" onclick="editable_comment('#commtext','{{comnt.id}}main','cancel')"></small>
+
+            <!-- <div id="commbox{{comnt.id}}main">
+                <p class='p-0 m-0' id="commtext{{comnt.id}}main">{{comnt.text|safe}}</p>
+            </div>
+            <small id="editabletext{{comnt.id}}mainbutton"></small>
+            <small id="canceltext{{comnt.id}}mainbutton" onclick="editable_comment('#commtext','{{comnt.id}}main','cancel')"></small> -->
+        </div>
+        {% if user_authenticated %}
+            <ul class="list-inline pt-0">
+            <li class="list-inline-item"><small class="comment_like_count_{{comnt.id}}_main text-muted" disabled>{% if comnt.like_by.count > 0 %} {{comnt.like_by.count}}{% endif %} </small> <a href='#'><small id="comment_likes_{{comnt.id}}_main" class="comment_like" onclick="follow_and_comment_like(event, '{{comnt.id}}' + '_main');return false" data-href="{% url 'comment_likes' comment_type='main_comment' id=comnt.id %}">{% if nav_bar_user in comnt.like_by.all %}Unlike{% else %}Like{% endif %} </small></a></li>
+                <li class="list-inline-item">
+                    <a data-toggle="collapse" href="#collapse{{comnt.id}}" aria-expanded="false" aria-controls="collapse{{comnt.id}}">
+                    <small id="editable-text-{{comnt.id}}-reply"><i class="fa fa-share"></i> reply</small>
+                    </a>
+                </li>
+                <!-- {% if comnt.commentreply_set.count > 0 %}
+                <li class="list-inline-item">
+                    <a data-toggle="collapse" href="#collapse{{comnt.id}}more" aria-expanded="false" aria-controls="collapse{{comnt.id}}more">
+                    <small id="editable-text-{{comnt.id}}-more">{{comnt.commentreply_set.count }} replies</small>
+                    </a>
+                </li>
+                {% endif %} -->
+            </ul>
+            <div class="collapse" id="collapse{{comnt.id}}" data-parent="#accordian">
+              <div class="card card-body mt-0 pt-0 border-0" style="background-color:rgb(244,244,244)">
+                <form {% if user_authenticated %} id="Public_comment_{{comnt.id}}"
+                        data-href="{% url 'public_comment' comnt.post.author.username %}"
+                    {% else %}
+                        data-href="{% url 'login' %}"
+                    {% endif %}
+                        >
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <input type="hidden" name="post" value="{{comnt.post.id}}">
+                        <input type="hidden" name="path" value="{{userpost.slug_name}}">
+                        <input type="hidden" name="reply_to" value="{{comnt.user.username}}">
+                        <input type="hidden" name="comment_id" value="{{comnt.id}}">
+                        <label class="border-info" for="message">Type message</label>
+                        <textarea class="form-control" name="message" id="main_message_{{comnt.id}}" rows="5" cols="50" placeholder="reply" required></textarea>
+                        <button class="btn btn-sm bg-light shadow" type="submit" name="button" onclick="reply_Public_comment(event,'{{comnt.id}}','main');return false">reply</button>
+                    </div>
+                </form>
+              </div>
+            </div>
+            {% else %}
+                <a class="border-0 mb-3" id="editable-text-{{comnt.id}}-reply" type="button" data-toggle="modal" data-target="#exampleModalCenter"><small><i class="fa fa-share"></i>  reply</small></a>
+            {% endif %}
+            <!-- Replied comments -->
+            {% if comnt.commentreply_list %}
+            {% for j in comnt.commentreply_list %}
+            <div class='media reply_comment_media_1008{{j.id}}' id="reply_comment_1008{{j.id}}">
+                <a href="#reply_comment_1008{{j.id}}"></a>
+                {% if j.user.profile_photo %}
+                    <img class='img-fluid rounded-circle mr-2' width='30' height='30' src='{{j.user.profile_photo.url}}' alt='pt'>
+                {% else %}
+                    <img class='img-fluid mr-2' src="{% static 'assets/img/17004.svg' %}" alt='photo' width='30' height='30'>
+                {% endif %}
+                <div class='media-body'>
+                    <p class='p-0 m-0'><a href="mailto:{{j.user.username}}" onmouseover="hover_func({{j.id}},'r')" data-toggle="tooltip_r{{j.id}}" data-html="true"
+                        title="<div class='card bg-dark' style='width: 18rem;'>
+                                <div class='col-md-10 ml-md-3'>
+                                    <img {% if j.user.profile_photo %}
+                                            src='{{j.user.profile_photo.url}}'
+                                         {% else %}
+                                             src='{% static 'assets/img/17004.svg' %}'
+                                         {% endif %} class='img-fluid card-img-top rounded-circle' width='50px' width='50px' alt='photo'>
+                                </div>
+                              <div class='card-body'>
+                                <a href='{% url 'dashboard' j.user.username %}' class='card-title text-capitalize text-white'>
+                                    {% if j.user.First_name %}
+                                        {{j.user.First_name}} {{j.user.Last_name}}
+                                    {% else %}
+                                        {{j.user.username}}
+                                    {% endif %}</a>
+                                    <p class='card-text d-inline-block'>{% if j.user.interests %}{{j.user.interests}}{% endif %}</p>
+                                    <p class='card-text'>followed by {{j.user.followers.count}} people</p>
+
+                                    <ul class='list-inline'>
+                                        <li class='list-inline-item'><a class='text-white'{% if j.user.youtube_url %} href='{{j.user.youtube_url}}' {% endif %}><i class='fa fa-youtube-play'></i></a></li>
+                                        <li class='list-inline-item'><a class='text-white' {% if j.user.facebook_url %} href='{{j.user.facebook_url}} {% endif %}'><i class='fa fa-facebook-official'></i></a></li>
+                                        <li class='list-inline-item'><a class='text-white' {% if j.user.github_url %} href='{{j.user.github_url}}' {% endif %}><i class='fa fa-github'></i></a></li>
+                                        <li class='list-inline-item'><a class='text-white' {% if j.user.youtube_url %} href='{{j.user.youtube_url}}' {% endif %}><i class='fa fa-globe'></i></a></li>
+                                        <li class='list-inline-item'><a class='text-white' {% if j.user.linkedin_url %} href='{{j.user.linkedin_url}}' {% endif %}><i class='fa fa-linkedin'></i></a></li>
+                                    </ul>
+                                </div>
+                        </div>">
+                        {% if j.user.First_name %}{{j.user.First_name}} {{j.user.Last_name}}<small class="text-muted"> @{{j.user.username}}</small>
+                        {% else %}
+                        {{j.user.username}}
+                        {% endif %}
+                        </a>
+                        <small class='text-muted'>{% if j.user.username == useracc.username %} <small style="background-color: #d9d8d7; border-radius: 10%;">author</small>{% endif %} ({{j.date_created|date}})  {% if j.reply_to.username %} <a href="{% url 'dashboard' j.reply_to.username %}" class="badge badge-pill badge-dark"><i class="fa fa-share"> </i> {{j.reply_to.username}}</a> {% endif %}
+                            {% if username == useracc.username or username == j.user.username %}
+                                <strong class="dropdown">
+                                  <strong class="text-black dropbutton{{j.id}}reply" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> . . .</strong>
+                                  <small class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                      {% if username == j.user.username %}
+                                        <small type="button" onclick="editable_comment('#commtext','{{j.id}}reply','')" class="dropdown-item">Edit</small>
+                                      {% endif %}
+                                    <small type="button" data-toggle="modal" data-target="#replycommentDelete1{{j.id}}" class="dropdown-item">Delete</small>
+                                  </small>
+                                </strong>
+                            {% endif %}
+                            </small>
+
+                    </p>
+                    <form id="commbox{{j.id}}reply" data-href="{% url 'edit_comment' comment_type='reply_comment' id=j.id %}">
+                        {% csrf_token %}
+                        <small class='p-0 m-0' id="commtext{{j.id}}reply">{{j.text|safe}}</small>
+                    </form>
+                    <small id="editabletext{{j.id}}replybutton" onclick="editable_comment('#commbox','{{j.id}}reply','sbmit')"></small>
+                    <small id="canceltext{{j.id}}replybutton" onclick="editable_comment('#commtext','{{j.id}}reply','cancel')"></small>
+                    {% if user_authenticated %}
+                    <ul class='list-inline pt-0'>
+                        <li class="list-inline-item"><small class="comment_like_count_{{j.id}}_reply text-muted" disabled>{% if j.like_by.count > 0 %} {{j.like_by.count}}{% endif %} </small> <a href='#'><small id="comment_likes_{{j.id}}_reply" class="comment_like" onclick="follow_and_comment_like(event, '{{j.id}}' + '_reply');return false" data-href="{% url 'comment_likes' comment_type='reply_comment' id=j.id %}">{% if nav_bar_user in j.like_by.all %}Unlike {% else %}Like{% endif %} </small></a></li>
+                        <li class='list-inline-item'>
+                                <a class='collapsed' data-toggle='collapse' href='#collapseExample1{{j.id}}' aria-expanded='false' aria-controls='collapseExample{{j.id}}'>
+                                <small><i class='fa fa-share'></i> reply</small>
+                                </a>
+                        </li>
+                    </ul>
+                    <div class='collapse' id='collapseExample1{{j.id}}' data-parent='#accordian'>
+                      <div class='card card-body mt-0 pt-0 border-0' style='background-color:rgb(244,244,244)'>
+                          <!-- Reply comment Form -->
+                        <form {% if user_authenticated %} id='Public_comment_r{{j.id}}'
+                                data-href="{% url 'public_comment' comnt.post.author.username %}"
+                            {% else %}
+                                data-href="{% url 'login' %}"
+                            {% endif %}
+                                >{% csrf_token %}
+                            <div class='form-group row'>
+                                <input type='hidden' name='post' value='{{j.user_post.id}}'>
+                                <input type='hidden' name='comment_id' value='{{comnt.id}}'>
+                                <input type='hidden' name='path' value='{{userpost.slug_name}}'>
+                                <input type="hidden" name="reply_to" value="{{j.user.username}}">
+                                <label class='border-info' for='message'>Type message</label>
+                                <textarea class='form-control' name='message' id='reply_message_{{j.id}}' rows='5' cols='50' placeholder='reply' required></textarea>
+                                <button class='btn btn-sm bg-light shadow' type='submit' name='button' onclick="reply_Public_comment(event,'{{j.id}}','reply');return false">reply</button>
+                            </div>
+                        </form>
+                      </div>
+                    </div>
+                    {% else %}
+                        <a class='border-0 mb-3' type="button" data-toggle="modal" data-target="#exampleModalCenter"><small><i class="fa fa-share"></i> reply </small></a>
+                    {% endif %}
+                </div>
+            </div>
+            {% if username == j.user.username or username == useracc.username %}
+                {% include 'partials/_reply_comment_delete_pop.html' with dlt=j %}
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+        <h6 class="btn btn-disabled">No comments on this post yet</h6>
+    {% endif %}
+    {% if user_authenticated %}
+    <div class="media">
+        <div class="media-body">
+            <ul class="list-inline pt-0">
+                <li class="list-inline-item">
+                    <a class="collapsed" data-toggle="collapse" href="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2">
+                    <h4>comment: <i class="fa fa-comments"></i> </h4>
+                    </a>
+                </li>
+            </ul>
+            <div class="collapse" id="collapseExample2" data-parent="#accordian">
+              <div class="card card-body mt-0 pt-0 border-0" style="background-color:rgb(244,244,244)">
+                  <form {% if user_authenticated %} id="Public_comment_main_comment"
+                          data-href="{% url 'public_comment' userpost.author.username %}"
+                      {% else %}
+                          data-href="{% url 'login' %}"
+                      {% endif %}
+                          >{% csrf_token %}
+                      <div class="form-group row">
+                          <input type="hidden" name="post" value="{{userpost.id}}">
+                          <input type="hidden" name="path" value="{{userpost.slug_name}}">
+                          <label class="border-info" for="message">Type message</label>
+                          <textarea class="form-control" name="message" id="main_message_main_comment" rows="8" cols="80" placeholder="reply" required></textarea>
+                          <button class="btn btn-sm bg-light shadow" type="submit" name="button" onclick="reply_Public_comment(event,'main_comment','main');return false">Submit</button>
+                      </div>
+                  </form>
+              </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% else %}
+    <div class="mx-2 px-2 row">
+        <ul class="list-inline pt-0">
+            <li class="list-inline-item">
+                <button class="btn border-left" disabled>Wants to comments?</button>
+                <button class="btn btn-sm btn-dark" type="button" data-toggle="modal" data-target="#exampleModalCenter">Click here</button>
+                <!-- <button class="border-0" disabled><strong>Or</strong></button>
+                <a data-toggle="collapse" href="#collapse" aria-expanded="false" aria-controls="collapse">
+                    <button class="btn btn-outline-dark" type="button">Disqus</button>
+                </a> -->
+            </li>
+        </ul>
+        <!-- <div class="collapse" id="collapse">
+          <div class="card card-body mt-0 pt-0 border-0" style="background-color:rgb(244,244,244)">
+            <form data-href="#">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <input type="hidden" name="post" value="0">
+                    {% if comnt.id %}
+                        <input type="hidden" name="comment_id" value="0">
+                    {% endif %}
+                    <label class="border-info" for="message">Type message</label>
+                    <textarea class="form-control" name="message" rows="8" cols="80" placeholder="reply" required></textarea>
+                    <button class="btn btn-sm bg-light shadow" type="submit" name="button">reply</button>
+                </div>
+            </form>
+          </div>
+        </div> -->
+    </div><br>
+    {% endif %}
+</div>
+<!-- end of comments -->

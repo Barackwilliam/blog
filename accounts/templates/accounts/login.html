@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %} | Login {% endblock %}
+{% block content %}
+<section id="login_id" class="bg-light py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 mx-auto">
+        <div class="card">
+              <div class="card-header bg-dark text-white">
+                <h4>
+                  <i class="fas fa-sign-in-alt"></i> Login</h4>
+              </div>
+              <div class="card-body">
+                  {% include 'partials/_alerts.html' %}
+                  <form action="{% url 'login' %}" method="POST">
+                      {% csrf_token %}
+                  <div class="form-group">
+                      <label for="username">Username or Email</label>
+                      <input type="text" name="username" class="form-control" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                      <div class="g-recaptcha" data-sitekey="6Lfoqb4UAAAAAPUT6qH0RxRiy3fHHn__hoh75fvS"></div>
+                  </div>
+                  {% if request.POST.path %}
+                    <input type="hidden" name="path" value="{{request.POST.path}}">
+                    <input type="hidden" name="post" value="{{request.POST.post}}">
+                    <input type="hidden" name="message" value="{{request.POST.message}}">
+                    <input type="hidden" name="comment_id" value="{{request.POST.comment_id}}">
+                  {% elif request.GET.next %}
+                    <input type="hidden" name="next" value="{{request.GET.next}}">
+                  {% elif request.POST.next %}
+                    <input type="hidden" name="next" value="{{request.POST.next}}">
+                  {% endif %}
+                  <input type="submit" value="Login" class="btn btn-dark btn-block">
+                </form>
+                <!-- <div class="text-center">
+                    <hr><h6>=====OR=====</h6>
+                </div>--><hr> 
+                <div class="form-group">
+                    <a href="{% url 'password' %}">
+                        <small class="text-muted">Forget password?</small></a>
+                </div>
+                <div class="form-group">
+                    <small class="text-muted">Don't have an Account?</small>
+                    <a href="{% url 'register' %}">
+                        <small class="text-muted">click here</small></a>
+                </div>
+              </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

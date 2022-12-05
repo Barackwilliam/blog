@@ -1,0 +1,84 @@
+<div class="modal fade in animated" role="dialog" tabindex="-1" id="exampleModalCenter" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <nav>
+                            <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
+                                <a class="nav-item nav-link active" id="nav-login-tab" data-toggle="tab" href="#nav-login" role="tab" aria-controls="nav-login" aria-selected="true">Log In</a>
+                                <a class="nav-item nav-link" id="nav-register-tab" data-toggle="tab" href="#nav-register" role="tab" aria-controls="nav-register" aria-selected="false">Register</a>
+                            </div>
+                        </nav>
+                        <div class="tab-content" id="nav-tabContent">
+                            <div class="tab-pane fade show active" id="nav-login"  aria-labelledby="nav-login-tab">
+                                <div class="modal-body">
+                                    <form id='loginForm' data-href="{% url 'login' %}">
+                                        {% csrf_token %}
+                                        <div class="form-group"><label for="username">Email or username:</label>
+                                            <input class="bg-light border-info shadow form-control" type="text" name="username" required="">
+                                        </div>
+                                        <div class="form-group"><label for="password">Password:</label>
+                                            <input class="bg-light border-info shadow form-control" type="password" required="" name="password" placeholder="password">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-light" type="button" data-dismiss="modal">Close</button>
+                                            <button class="btn btn-primary" type="submit">Log In</button>
+                                        </div>
+                                        <input type="hidden" name="pop_l" value="cx0001">
+                                    </form>
+                                    <div class="text-center">
+                                        <!-- <hr><h6>=====OR=====</h6> -->
+                                        </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="nav-register" aria-labelledby="nav-register-tab">
+                                <div class="modal-body">
+                                    <form id="registerForm" data-href="{% url 'register' %}">
+                                        {% csrf_token %}
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                {{ pop_form.first_name.errors }}
+                                                <label for="{{ pop_form.first_name.id_for_label }}">First name</label>
+                                                {{pop_form.first_name}}
+                                                
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                {{ pop_form.last_name.errors }}
+                                                <label for="{{ pop_form.last_name.id_for_label }}">Last name</label>
+                                                {{pop_form.last_name}}
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            {{ pop_form.email.errors }}
+                                            <label for="{{ pop_form.email.id_for_label }}">Email</label>
+                                            {{pop_form.email}}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ pop_form.password.errors }}
+                                            <label for="{{ pop_form.email.id_for_label }}">Password</label>
+                                            {{pop_form.password}}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ pop_form.password2.errors }}
+                                            <label for="{{ pop_form.email.id_for_label }}">Confirm password</label>
+                                            {{pop_form.password2}}
+                                        </div>
+                                        <input type="hidden" name="pop_r" value="cx0001">
+                                        <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Close</button>
+                                            <button class="btn btn-primary" type="submit">Register</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

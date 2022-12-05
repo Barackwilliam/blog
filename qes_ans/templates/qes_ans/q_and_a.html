@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-7 mx-auto">
+            <div class="card-header bg-light text-dark">
+              <h4><i class="fas fa-question-circle"></i> Ask question :-</h4>
+            </div>
+            <div class="card-row">
+                <form {% if 'edit' in request.path %}action="{% url 'edit_question' question.id %}" {% else %} action="{% url 'q_and_a' %}" {% endif %} method="POST">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label for="{{q_form.title.id_for_title}}"><span style='color:red;'>*</span>Title : </label>
+                            <small class="m-0 p-0 bg-light"> (Write in short (as title) you are asking a question to another person.) </small>
+                            {{q_form.title}}
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="{{q_form.qes.id_for_label }}"><span style='color:red;'>*</span>Put your question below : </label>
+                            <br><small class="m-0 p-0"> (Write all information/thought so that other user can understand your problem.)</small>
+                            {{q_form.media}}
+                            {{q_form.qes}}
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="{{q_form.tag.id_for_tag}}"><span style='color:red;'>*</span>Tag</label>
+                            {{q_form.tag}}
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-success" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

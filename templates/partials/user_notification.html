@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="alrt">
+        {% include 'partials/_alerts.html' %}
+    </div>
+    <div class="row" id="myrow">
+        <div class="col-md-0 col-lg-2 col-xl-2">
+
+        </div>
+        <div class="col-md-7 col-lg-6 col-xl-6 infinite-scroll">
+            <br>
+            <h4>All notification:</h4><br>
+            {% if request.user.is_authenticated %}
+            {% for notif in object_list %}
+            
+                <div class="card-body m-0 p-0">
+                    <p class=""><a href="{{notif.text_url}}"> {{notif.text}}</a></p><hr>
+                </div>
+            {% empty %}
+            <div class="col">
+                <h5>You does't do anything still yet. Ativity log is empty</h5>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% if is_paginated %}
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" href="?page=1">First</a>
+              </li>
+            <li class="page-item {% if not page_obj.has_previous %} disabled">
+              <a class="page-link" {% else %}"><a class="page-link" href="?page={{page_obj.previous_page_number}}" title="previous page number" {% endif %} tabindex="-1">&laquo;</a>
+            </li>
+            {% for i in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == i %} active {% endif %}">
+              <a class="page-link" href="?page={{i}}">{{i}} <span class="sr-only">(current)</span></a>
+            </li>
+            {% endfor %}
+            <li class="page-item">
+                {% if page_obj.has_next %}
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" title="next page number">&raquo;</a>
+                {% endif %}
+            </li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+          </ul>
+        {% endif %}
+            <br>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

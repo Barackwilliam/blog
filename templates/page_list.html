@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load static %}
+{% block content %}
+    <section id="sechero">
+        <div class="container">
+            <div class="jumbotron text-center pt-0 mt-0">
+                <img class="p-0 m-0" src="{% static 'assets/img/logoblack.png' %}" height="130px" width="200px" alt="">
+                <h5 class="">Share your educational <strong>stories,journey</strong> and your <strong>interests.</strong></h5>
+                <hr>
+                {% if not user.is_authenticated %}
+                    <a class="btn btn-dark" href="{% url 'register' %}">Post your skill</a>
+                {% else %}
+                    <a class="btn btn-dark" href="{% url 'post_blog' user.username %}">Post your skill</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    <div class="container">
+        <div class="alrt">
+            {% include 'partials/_alerts.html' %}
+        </div>
+        <div class="row" id="myrow">
+            <div class="col-md-8 col-lg-8 col-xl-8">
+                <div class="row infinite-scroll">
+                {% for i in object_list %}
+                <div class="col-md-6 col-lg-6 col-sm-12 infinite-item">
+                    
+                        <div class="card shadow mt-3">
+                            <div class="card-body text-center">
+                                <a class="card-link text-dark" href="{% url 'detail_page' i.user.username i.slug_name %}">
+                                    <h4 class="card-title">{{i.blog_title}}</h4>
+                                </a>
+                                <ul class="list-inline">
+                                    <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-calendar"></i><small> {{i.publish_date|date}}</small></a></li>
+                                    <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-user-circle-o"></i><small class="text-body"> {% if i.user.first_name %}{{i.user.first_name}} {{i.user.last_name}}{% else %}{{i.user.username}}{% endif %}</small></a></li>
+                                    <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-comments"></i><small class="text-body"> {{i.total_comment}} comments</small></a></li>
+                                    <li class="list-inline-item"><a class="text-body" href="#"><i class="fa fa-eye"></i><small class="text-body"> {{i.total_views}} views</small></a></li>
+                                </ul>
+                            </div>
+                            {% if i.blog_image %}
+                                <img class="img-fluid card-img-top w-100" style="height: 250px;" src="{{i.blog_image.url}}">
+                            {% endif %}
+                            {% if i.image_credit %}
+                                <p class="ml-lg-2 pb-0 mb-0">Image credit :- {{i.image_credit}} </p>
+                            {% endif %}
+                            <div class="card-body">
+                                <a class="btn btn-sm btn-dark" href="{% url 'detail_page' i.user.username i.slug_name %}">Read more</a>
+                            </div>
+                        </div>
+                    
+                </div>
+                {% empty %}
+                <div class="col">
+                    <h2>There are no Post</h2>
+                </div>
+                {% endfor %}
+                </div>
+            </div>
+            <div class="col mt-3">
+                {% include 'partials/side_view.html' %}
+                {% if popular_post %}
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <button class="btn btn-light card-title"> Popular posts :-</button>
+                            {% for post in popular_post %}
+                            <div class="col">
+                                <div class="row card-title">
+                                    <div class="col-3">
+                                        <img class="img-fluid rounded-circle border-0 card-img d-block" style="width:42px;height:42px;" src="{{post.blog_image.url}}" alt="">
+                                    </div>
+                                    <div class="col-9">
+                                        <a class="text-muted text-center card-title pl-0" href="{% url 'detail_page' post.user.username post.slug_name %}">
+                                             {{post.blog_title}}
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+        <div class="text-center spinner_on_off">
+          <div class="spinner-border spinner-border-sm" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="infinite-more-link"></a>
+        {% endif %}
+    </div>
+{% endblock %}
